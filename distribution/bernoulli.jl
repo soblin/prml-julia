@@ -1,3 +1,5 @@
+using Distributions
+
 include("beta.jl")
 
 mutable struct BernoulliDist
@@ -43,4 +45,19 @@ function fitting_map(dist::BernoulliDist, X::Array{Float64, 1})
     n_ones = sum(X .== 1.0);
     dist._beta._n_ones += n_ones;
     dist._beta._n_zeros += n_zeros;
+end
+
+function draw(bern::BernoulliDist, n_trials::Int64)
+    trials = rand(Uniform(0, 1), n_trials);
+
+    mu = 0;
+    if(bern._bayes == true)
+        # sample from beta
+        mu = bern._beta._n_ones / (bern._beta._n_ones + bern._beta._n_zeros);
+    else
+        # sample ml
+        mu = bern._mu;
+    end
+
+    return sum(mu .>  trials)
 end
