@@ -27,9 +27,20 @@ function fitting(dist::BernoulliDist, X::Array{Float64, 1})
 end
 
 function fitting_ml(dist::BernoulliDist, X::Array{Float64, 1})
-    return "fitting_ml"
+    # X is the array of 0 or 1
+    # X .== 0 is the array indicating if X[i] == 0
+    n_zeros = sum(X .== 0.0);
+    # X .== 1 is the array indicating if X[i] == 1
+    n_ones = sum(X .== 1.0);
+    dist._mu = n_ones * 1.0 / (n_ones + n_zeros);
 end
 
 function fitting_map(dist::BernoulliDist, X::Array{Float64, 1})
-    return "fitting_map"
+    # X is the array of 0 or 1
+    # X .== 0 is the array indicating if X[i] == 0
+    n_zeros = sum(X .== 0.0);
+    # X .== 1 is the array indicating if X[i] == 1
+    n_ones = sum(X .== 1.0);
+    dist._beta._n_ones += n_ones;
+    dist._beta._n_zeros += n_zeros;
 end
