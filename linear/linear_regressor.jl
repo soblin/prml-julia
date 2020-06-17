@@ -1,10 +1,4 @@
-module linear_regressor
-
 using LinearAlgebra
-
-export LinearRegressor
-export fitting
-export predict
 
 mutable struct LinearRegressor
     _w::Array{Float64, 1}
@@ -33,5 +27,3 @@ function predict(regressor::LinearRegressor, phi, return_std::Bool)
         return y
     end
 end
-
-end # module

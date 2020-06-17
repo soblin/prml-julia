@@ -1,8 +1,3 @@
-module polynomial_features
-
-export PolynomialFeature
-export transform
-
 struct PolynomialFeature
     _degree::Int64
 end
@@ -19,5 +14,3 @@ function transform(feature::PolynomialFeature, x)
     ret = collect(reshape(tmp, sample_size, degree+1));
     return ret;
 end
-
-end # module
