@@ -9,11 +9,11 @@ mutable struct GaussianDist
     end
 end
 
-mutable struct GaussianBayesDist
+mutable struct GaussianBayesMeanDist
     _mu_gauss::GaussianDist
     _var::Float64
     _precision::Float64 # 1/sigma^2
-    function GaussianBayesDist(mu_gauss::GaussianDist, var::Float64)
+    function GaussianBayesMeanDist(mu_gauss::GaussianDist, var::Float64)
         new(mu_gauss, var, 1.0 / var)
     end
 end
@@ -34,7 +34,7 @@ function fitting(gauss::GaussianDist, X::Array{Float64, 1})
     gauss._precision = 1.0 / gauss._var;
 end
 
-function fitting(gauss::GaussianBayesDist, X::Array{Float64, 1})
+function fitting(gauss::GaussianBayesMeanDist, X::Array{Float64, 1})
     # mu and sigma for prior
     mu_0 = gauss._mu_gauss._mu;
     precision_0 = gauss._mu_gauss._precision;

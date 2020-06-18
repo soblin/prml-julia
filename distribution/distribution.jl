@@ -3,7 +3,8 @@ export BetaDist
 export DirichletDist
 export CategoricalDist
 export GaussianDist
-export GaussianBayesDist
+export GaussianBayesMeanDist
+export GammaDist
 
 export pdf
 export fitting
@@ -14,3 +15,4 @@ include("beta.jl")
 include("dirichlet.jl")
 include("categorical.jl")
 include("gaussian.jl")
+include("gamma.jl")
