@@ -6,6 +6,7 @@ export GaussianDist
 export GaussianBayesMeanDist
 export GaussianBayesVarDist
 export GammaDist
+export MultivariateGaussianDist
 
 export pdf
 export fitting
@@ -17,3 +18,4 @@ include("dirichlet.jl")
 include("categorical.jl")
 include("gaussian.jl")
 include("gamma.jl")
+include("multivariate_gaussian.jl")
