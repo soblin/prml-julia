@@ -1,5 +1,7 @@
 using Statistics
 
+include("gamma.jl")
+
 mutable struct GaussianDist
     _mu::Float64
     _var::Float64 # sigma^2
@@ -16,6 +18,10 @@ mutable struct GaussianBayesMeanDist
     function GaussianBayesMeanDist(mu_gauss::GaussianDist, var::Float64)
         new(mu_gauss, var, 1.0 / var)
     end
+end
+
+mutable struct GaussianBayesVarDist
+    _var_gamma::GammaDist
 end
 
 function pdf(gauss::GaussianDist, x::Float64)
@@ -49,4 +55,14 @@ function fitting(gauss::GaussianBayesMeanDist, X::Array{Float64, 1})
     gauss._mu_gauss._mu = mu_N;
     gauss._mu_gauss._var = 1.0 / precision_N;
     gauss._mu_gauss._precision = precision_N;
+end
+
+function fitting(gauss::GaussianBayesVarDist, X::Array{Float64, 1})
+    sigma2_ML = var(X);
+    N = size(X)[1];
+
+    if N != 1
+        gauss._var_gamma._a += N / 2.0;
+        gauss._var_gamma._b += N / 2.0 * sigma2_ML;
+    end
 end

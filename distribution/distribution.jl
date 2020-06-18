@@ -4,6 +4,7 @@ export DirichletDist
 export CategoricalDist
 export GaussianDist
 export GaussianBayesMeanDist
+export GaussianBayesVarDist
 export GammaDist
 
 export pdf
