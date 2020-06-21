@@ -23,7 +23,7 @@ function predict(regressor::LinearRegressor, phi::Array{Float64, 1}, return_std:
     std = regressor._var;
     
     if return_std == true
-        return y, y_std
+        return y, std
     else
         return y
     end
@@ -32,7 +32,7 @@ end
 function predict(regressor::LinearRegressor, Phi::Array{Float64, 2}, return_std::Bool)
     # `Phi` is the transformed feature of x, of size (n_feature, sample_size)
     y = transpose(Phi) * regressor._w;
-    std = zeros(1, size(y)[1]) .+ regressor._var;
+    std = regressor._var;
     
     if return_std == true
         return y, std
