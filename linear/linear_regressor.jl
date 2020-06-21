@@ -17,10 +17,23 @@ function fitting(regressor::LinearRegressor, Phi::Array{Float64, 2}, t::Array{Fl
     regressor._var = var
 end
 
+function predict(regressor::LinearRegressor, phi::Array{Float64, 1}, return_std::Bool)
+    # phi is the transformed vector of size n_features
+    y = transpose(phi) * regressor._w;
+    std = regressor._var;
+    
+    if return_std == true
+        return y, y_std
+    else
+        return y
+    end
+end
+
 function predict(regressor::LinearRegressor, Phi::Array{Float64, 2}, return_std::Bool)
-    # `phi` is the transformed feature of x, of size (n_feature, sample_size)
+    # `Phi` is the transformed feature of x, of size (n_feature, sample_size)
     y = transpose(Phi) * regressor._w;
-    std = zeros(1, size(y)[1]) .+ regressor._var
+    std = zeros(1, size(y)[1]) .+ regressor._var;
+    
     if return_std == true
         return y, std
     else
