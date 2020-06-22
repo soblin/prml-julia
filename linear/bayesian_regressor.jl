@@ -24,7 +24,9 @@ function fitting(regressor::BayesianRegressor, PhiT::Array{Float64, 2}, t::Array
     S_0_inv = regressor._w_precision;
     beta = regressor._beta;
     
-    S_N_inv = S_0_inv + beta * PhiT * transpose(PhiT);
+    tmp = S_0_inv + beta * PhiT * transpose(PhiT);
+    # make S_N_inv Cholesky
+    S_N_inv = (tmp + transpose(tmp)) / 2.0;
     w_N = inv(S_N_inv) * (S_0_inv * w_0 + beta * PhiT * t);
 
     # update
@@ -62,7 +64,7 @@ function predictSampling(regressor::BayesianRegressor, PhiT::Array{Float64, 2}, 
 
     w_samples = rand(MvNormal(w_mean, w_cov), n_sampling);
     for i in 1:n_sampling
-        ret[i, :] = transpose(w[:, i]) * PhiT;
+        ret[i, :] = transpose(w_samples[:, i]) * PhiT;
     end
 
     return ret;

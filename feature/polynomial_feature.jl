@@ -9,7 +9,7 @@ function transform(feature::PolynomialFeature, x::Array{Float64, 1})
     degree = feature._degree;
     ret = zeros(Float64, degree+1, sample_size);
     for i in 1:sample_size
-        ret[:, i] = [ x[i]^(j+1) for j in 0:degree];
+        ret[:, i] = [ x[i]^j for j in 0:degree];
     end
 
     return ret;
