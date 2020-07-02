@@ -5,7 +5,7 @@ mutable struct NeuralNetwork
     cost_function::AbstractCostFunction
     n_layers::Int64 # cache the number of layers
     function NeuralNetwork(layers_::Array{AbstractLayer, 1}, cost_function_::AbstractCostFunction)
-        new(copy(layers), cost_function, size(layers)[1])
+        new(copy(layers_), cost_function_, size(layers_)[1])
     end
 end
 
