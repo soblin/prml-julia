@@ -62,10 +62,10 @@ mutable struct ReLULayer <: AbstractLayer
     end
 end
 
-function forward_propagation(layer::AbstractLayer, x::Array{Float64, 1})
-    @assert layer.dim_input == size(x)[1]
-    x_ = collect(reshape(x, size(x)[1], 1))
-    return forward_propagation_impl(layer, x_)
+function forward_propagation(layer::AbstractLayer, x_::Array{Float64, 1})
+    @assert layer.dim_input == size(x_)[1]
+    x = collect(reshape(x_, size(x_)[1], 1))
+    return forward_propagation_impl(layer, x)
 end
 
 function forward_propagation(layer::AbstractLayer, X::Array{Float64, 2})
@@ -75,13 +75,13 @@ end
 
 function forward_propagation_impl(layer::LinearLayer, X::Array{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
-    layer.input = X
+    layer.input = copy(X)
     return (layer.W) * X .+ (layer.b)
 end
 
 function forward_propagation_impl(layer::SigmoidLayer, X::Array{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
-    layer.input = X
+    layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
     layer.output = 1.0 ./ (1.0 .+ exp.(-activation))
     return layer.output
@@ -89,7 +89,7 @@ end
 
 function forward_propagation_impl(layer::TanhLayer, X::Array{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
-    layer.input = X
+    layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
     layer.output = tanh.(activation)
     return layer.output
@@ -97,7 +97,7 @@ end
 
 function forward_propagation_impl(layer::ReLULayer, X::Array{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
-    layer.input = X
+    layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
     # layer.output = activation.clip(min=0)
     layer.output = (activation + broadcast(abs, activation)) / 2.0
