@@ -1,8 +1,11 @@
 # Julia PRML
 
-Implement PRML alorithms in Julia language
+Implementation of PRML alorithms in Julia language!
+
+Inspired by and great kudos to https://github.com/ctgk/PRML .
 
 ## Chapter1
+
 ![image1](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch1/image1.png)
 ![image2](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch1/image2.png)
 ![image3](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch1/image3.png)
