@@ -34,3 +34,4 @@ Inspired by and great kudos to https://github.com/ctgk/PRML .
 
 ![image1](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch5/image1.png)
 ![image2](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch5/image2.png)
+![image3](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch5/image3.png)
