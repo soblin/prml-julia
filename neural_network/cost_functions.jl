@@ -121,12 +121,12 @@ function delta_impl(cost_fn::GaussianMixtureError, output::AbstractArray{Float64
         end
         # sigma2s
         for k in 1:n_components
-            sigma2s[k] = exp(sigma2s[k])
+            sigma2s[k] = exp(sigma2s[k])^2
         end
 
         # (2) compute the graident
         # likelihoods of t_n for each gaussian pi_k N(t_n | mu_k, sigma_k)
-        t_n = targets[n]
+        t_n = targets[1, n]
         probs = [pis[k] * gaussian(t_n, mus[k], sigma2s[k]) for k in 1:n_components]
         gammas = probs ./ sum(probs)
         ret[1:n_components, n] = pis - gammas
