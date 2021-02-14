@@ -25,7 +25,9 @@ function delta(cost_fn::AbstractCostFunction, output::AbstractArray{Float64, 2},
     # output is the output of final layer
     # [output_1 output_2 ,,, output_N]
     # [target_1 target_2 ,,, target_N]
-    size(output) == size(targets) || error("delta: size does not match")
+    if typeof(cost_fn) != GaussianMixtureError
+        size(output) == size(targets) || error("delta: size does not match")
+    end
     return delta_impl(cost_fn, output, targets)
 end
 
@@ -76,3 +78,101 @@ function cost_impl(cost_fn::SumSquareError, output::AbstractArray{Float64, 2}, t
     diff = output - targets
     return sum(diff .* diff)
 end
+
+# not working yet
+struct GaussianMixtureError <: AbstractCostFunction
+    name::String
+    _n_components::Int64
+    function GaussianMixtureError(n_components::Int64, name::String="gaussian mixture error")
+        new(name, n_components)
+    end
+end
+
+function gaussian(x::Float64, mu::Float64, sigma2::Float64)
+    return exp(-(x - mu)^2 / (2 * sigma2)) / sqrt(2.0 * pi * sigma2)
+end
+
+function delta_impl(cost_fn::GaussianMixtureError, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
+    # output is the output of final layer
+    # [output_1 output_2 ,,, output_N] of size(n_feature, n_samples)
+    # [target_1 target_2 ,,, target_N] of size(1, n_samples)
+    n_samples = size(targets)[2]
+    n_components = cost_fn._n_components
+    @assert size(output)[1] == 3 * n_components
+
+    ret = zeros(3*n_components, n_samples)
+    for n in 1:n_samples
+        pis = view(output, 1:n_components, n)
+        mus = view(output, n_components+1:2*n_components, n)
+        sigma2s = view(output, 2*n_components+1:3*n_components, n)
+
+        # (1) convert output to [pis, mus, sigma2s]
+        # pis
+        max_pi = maximum(pis)
+        for k in 1:n_components
+            pis[k] = pis[k] - max_pi
+        end
+        for k in 1:n_components
+            pis[k] = exp(pis[k])
+        end
+        sum_pis = sum(pis)
+        for k in 1:n_components
+            pis[k] /= sum_pis
+        end
+        # sigma2s
+        for k in 1:n_components
+            sigma2s[k] = exp(sigma2s[k])
+        end
+
+        # (2) compute the graident
+        # likelihoods of t_n for each gaussian pi_k N(t_n | mu_k, sigma_k)
+        t_n = targets[n]
+        probs = [pis[k] * gaussian(t_n, mus[k], sigma2s[k]) for k in 1:n_components]
+        gammas = probs ./ sum(probs)
+        ret[1:n_components, n] = pis - gammas
+        ret[n_components+1:2*n_components, n] = gammas .* (mus .- t_n) ./ sigma2s
+        ret[2*n_components+1:3*n_components, n] = gammas .* (1.0 .- (t_n .- mus) .* (t_n .- mus) ./ sigma2s)
+    end
+
+    return ret
+end
+
+function cost_impl(cost_fn::GaussianMixtureError, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
+    n_samples = size(targets)[1]
+    n_components = cost_fn._n_components
+    @assert size(output)[1] == 3 * n_components
+    
+    cost = 0.0
+    for n in 1:n_samples
+        pis = view(output, 1:n_components, i)
+        mus = view(output, n_components+1:2*n_components, i)
+        sigma2s = view(output, 2*n_components+1:3*n_components, i)
+
+        # (1) convert output to [pis, mus, sigma2s]
+        # pis
+        max_pi = maximum(pis)
+        for k in 1:n_components
+            pis[k] = pis[k] - max_pi
+        end
+        for k in 1:n_components
+            pis[k] = exp(pis[k])
+        end
+        sum_pis = sum(pis)
+        for k in 1:n_components
+            pis[k] /= sum_pis
+        end
+        # sigma2s
+        for k in 1:n_components
+            sigma2s[k] = exp(sigma2s[k])
+        end
+
+        ln_sum = 0.0
+        for k in 1:n_components
+            ln_sum += pis[k] * gaussian(targets[n], mus[k], sigma2s[k])
+        end
+        cost -= log(ln_sum)
+    end
+
+    return cost
+end
+
