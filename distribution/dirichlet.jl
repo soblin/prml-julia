@@ -8,10 +8,10 @@ mutable struct DirichletDist
     * Prod_k[ mu_k^(alpha_k-1)]
     / gamma(alpha_1) / ... / gamma(alpha_k)
     =#
-    _alpha::Array{Float64, 1}
+    _alpha::AbstractArray{Float64, 1}
 end
 
-function pdf(dirichlet::DirichletDist, mu::Array{Float64, 1})
+function pdf(dirichlet::DirichletDist, mu::AbstractArray{Float64, 1})
     N = size(mu)[1];
     @assert N == size(dirichlet._alpha)[1]
     
@@ -26,7 +26,7 @@ function pdf(dirichlet::DirichletDist, mu::Array{Float64, 1})
     return gamma(sum_alpha) * prod_k / gamma_k
 end
 
-function pdf(dirichlet::DirichletDist, mu::Array{Float64, 2})
+function pdf(dirichlet::DirichletDist, mu::AbstractArray{Float64, 2})
     N = size(mu)[1];
     n_samples = size(mu)[2];
     @assert N == size(dirichlet._alpha)[1]

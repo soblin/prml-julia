@@ -1,15 +1,15 @@
 include("layer.jl")
 
 mutable struct NeuralNetwork
-    layers::Array{AbstractLayer, 1}
+    layers::AbstractArray{AbstractLayer, 1}
     cost_function::AbstractCostFunction
     n_layers::Int64 # cache the number of layers
-    function NeuralNetwork(layers_::Array{AbstractLayer, 1}, cost_function_::AbstractCostFunction)
+    function NeuralNetwork(layers_::AbstractArray{AbstractLayer, 1}, cost_function_::AbstractCostFunction)
         new(copy(layers_), cost_function_, size(layers_)[1])
     end
 end
 
-function fitting(nn::NeuralNetwork, X_::Array{Float64, 2}, t::Array{Float64, 2}, learning_rate::Float64)
+function fitting(nn::NeuralNetwork, X_::AbstractArray{Float64, 2}, t::AbstractArray{Float64, 2}, learning_rate::Float64)
     # X = [x_1 x_2 ,,, x_N]
     # t = [t_1 t_2 ,,, t_N]
     X = copy(X_)
@@ -27,7 +27,7 @@ function fitting(nn::NeuralNetwork, X_::Array{Float64, 2}, t::Array{Float64, 2},
 
 end
 
-function predict(nn::NeuralNetwork, X_::Array{Float64, 2})
+function predict(nn::NeuralNetwork, X_::AbstractArray{Float64, 2})
     # X = [x_1 x_2 ,,, x_N]
     X = copy(X_)
     for layer in nn.layers

@@ -14,7 +14,7 @@ function pdf(gamma::GammaDist, x::Float64)
     return (b^a) * (x^(a-1)) * exp(-b * x) / gamma(a)
 end
 
-function pdf(dist::GammaDist, X::Array{Float64, 1})
+function pdf(dist::GammaDist, X::AbstractArray{Float64, 1})
     a = dist._a;
     b = dist._b;
     return (b^a) .* (x.^(a-1)) .* exp.(-b .* x) ./ gamma(a)

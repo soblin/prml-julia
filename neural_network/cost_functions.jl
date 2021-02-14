@@ -21,7 +21,7 @@ struct SumSquareError <: AbstractCostFunction
     end
 end
 
-function delta(cost_fn::AbstractCostFunction, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function delta(cost_fn::AbstractCostFunction, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     # output is the output of final layer
     # [output_1 output_2 ,,, output_N]
     # [target_1 target_2 ,,, target_N]
@@ -29,13 +29,13 @@ function delta(cost_fn::AbstractCostFunction, output::Array{Float64, 2}, targets
     return delta_impl(cost_fn, output, targets)
 end
 
-function delta_impl(cost_fn::SigmoidCrossEntropy, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function delta_impl(cost_fn::SigmoidCrossEntropy, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     # `output` denotes "logits"
     probs = 1.0 ./ (1.0 .+ exp.(-output))
     return probs - targets
 end
 
-function delta_impl(cost_fn::SoftmaxCrossEntropy, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function delta_impl(cost_fn::SoftmaxCrossEntropy, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     output_max = [maximum(output[:, i]) for i in 1:size(output)[2]]
     output_ = output .- transpose(output_max)
     output_ = exp.(output_)
@@ -45,16 +45,16 @@ function delta_impl(cost_fn::SoftmaxCrossEntropy, output::Array{Float64, 2}, tar
     return probs - targets
 end
 
-function delta_impl(cost_fn::SumSquareError, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function delta_impl(cost_fn::SumSquareError, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     return output - targets
 end
 
-function cost(cost_fn::AbstractCostFunction, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function cost(cost_fn::AbstractCostFunction, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     size(output) == size(targets) || error("cost: size does not match")
     return cost_impl(cost_fn, output, targets)
 end
 
-function cost_impl(cost_fn::SigmoidCrossEntropy, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function cost_impl(cost_fn::SigmoidCrossEntropy, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     probs = 1.0 ./ (1.0 .+ exp.(-output))
     p = clamp.(probs, 1e-10, 1.0 - 1e-10)
 
@@ -62,7 +62,7 @@ function cost_impl(cost_fn::SigmoidCrossEntropy, output::Array{Float64, 2}, targ
     return sum(tmp)
 end
 
-function cost_impl(cost_fn::SoftmaxCrossEntropy, ouput::Array{Float64, 2}, targets::Array{Float64, 2})
+function cost_impl(cost_fn::SoftmaxCrossEntropy, ouput::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     output_max = [maximum(output[:, i]) for i in 1:size(output)[2]]
     output_ = output .- transpose(output_max)
     output_ = exp.(output_)
@@ -72,7 +72,7 @@ function cost_impl(cost_fn::SoftmaxCrossEntropy, ouput::Array{Float64, 2}, targe
     return -sum(targets .* log.(p))
 end
 
-function cost_impl(cost_fn::SumSquareError, output::Array{Float64, 2}, targets::Array{Float64, 2})
+function cost_impl(cost_fn::SumSquareError, output::AbstractArray{Float64, 2}, targets::AbstractArray{Float64, 2})
     diff = output - targets
     return sum(diff .* diff)
 end

@@ -29,18 +29,18 @@ function pdf(gauss::GaussianDist, x::Float64)
     return exp(-0.5 * d^2 / gauss._var) / sqrt(2 * pi * gauss._var);
 end
 
-function pdf(gauss::GaussianDist, X::Array{Float64, 1})
+function pdf(gauss::GaussianDist, X::AbstractArray{Float64, 1})
     d = X .- gauss._mu;
     return exp.(-0.5 * d.^2 / gauss._var) / sqrt(2 * pi * gauss._var);
 end
 
-function fitting(gauss::GaussianDist, X::Array{Float64, 1})
+function fitting(gauss::GaussianDist, X::AbstractArray{Float64, 1})
     gauss._mu = mean(X);
     gauss._var = var(X);
     gauss._precision = 1.0 / gauss._var;
 end
 
-function fitting(gauss::GaussianBayesMeanDist, X::Array{Float64, 1})
+function fitting(gauss::GaussianBayesMeanDist, X::AbstractArray{Float64, 1})
     # mu and sigma for prior
     mu_0 = gauss._mu_gauss._mu;
     precision_0 = gauss._mu_gauss._precision;
@@ -57,7 +57,7 @@ function fitting(gauss::GaussianBayesMeanDist, X::Array{Float64, 1})
     gauss._mu_gauss._precision = precision_N;
 end
 
-function fitting(gauss::GaussianBayesVarDist, X::Array{Float64, 1})
+function fitting(gauss::GaussianBayesVarDist, X::AbstractArray{Float64, 1})
     sigma2_ML = var(X);
     N = size(X)[1];
 

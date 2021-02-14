@@ -3,17 +3,17 @@ using Distributions
 abstract type AbstractLayer end
 
 mutable struct LinearLayer <: AbstractLayer
-    W::Array{Float64, 2}
-    b::Array{Float64, 1}
-    input::Array{Float64, 2}
-    output::Array{Float64, 2}
+    W::AbstractArray{Float64, 2}
+    b::AbstractArray{Float64, 1}
+    input::AbstractArray{Float64, 2}
+    output::AbstractArray{Float64, 2}
     dim_input::Int64
     dim_output::Int64
     # for Momentum SGD, RMSProp, and Adam
-    W_momentum::Array{Float64, 2}
-    W_momentum_aux::Array{Float64, 2}
-    b_momentum::Array{Float64, 1}
-    b_momentum_aux::Array{Float64, 1}
+    W_momentum::AbstractArray{Float64, 2}
+    W_momentum_aux::AbstractArray{Float64, 2}
+    b_momentum::AbstractArray{Float64, 1}
+    b_momentum_aux::AbstractArray{Float64, 1}
     param::Float64
     param_aux::Float64
     function LinearLayer(dim_input::Int64, dim_output::Int64, std::Float64=1.0, bias::Float64=0.0, param::Float64=0.9, param_aux::Float64=0.9)
@@ -25,17 +25,17 @@ mutable struct LinearLayer <: AbstractLayer
 end
 
 mutable struct SigmoidLayer <: AbstractLayer
-    W::Array{Float64, 2}
-    b::Array{Float64, 1}
-    input::Array{Float64, 2}
-    output::Array{Float64, 2}
+    W::AbstractArray{Float64, 2}
+    b::AbstractArray{Float64, 1}
+    input::AbstractArray{Float64, 2}
+    output::AbstractArray{Float64, 2}
     dim_input::Int64
     dim_output::Int64
     # for Momentum SGD, RMSProp, and Adam
-    W_momentum::Array{Float64, 2}
-    W_momentum_aux::Array{Float64, 2}
-    b_momentum::Array{Float64, 1}
-    b_momentum_aux::Array{Float64, 1}
+    W_momentum::AbstractArray{Float64, 2}
+    W_momentum_aux::AbstractArray{Float64, 2}
+    b_momentum::AbstractArray{Float64, 1}
+    b_momentum_aux::AbstractArray{Float64, 1}
     param::Float64
     param_aux::Float64
     function SigmoidLayer(dim_input::Int64, dim_output::Int64, std::Float64=1.0, bias::Float64=0.0, param::Float64=0.9, param_aux::Float64=0.9)
@@ -47,17 +47,17 @@ mutable struct SigmoidLayer <: AbstractLayer
 end
 
 mutable struct TanhLayer <: AbstractLayer
-    W::Array{Float64, 2}
-    b::Array{Float64, 1}
-    input::Array{Float64, 2}
-    output::Array{Float64, 2}
+    W::AbstractArray{Float64, 2}
+    b::AbstractArray{Float64, 1}
+    input::AbstractArray{Float64, 2}
+    output::AbstractArray{Float64, 2}
     dim_input::Int64
     dim_output::Int64
     # for Momentum SGD, RMSProp, and Adam
-    W_momentum::Array{Float64, 2}
-    W_momentum_aux::Array{Float64, 2}
-    b_momentum::Array{Float64, 1}
-    b_momentum_aux::Array{Float64, 1}
+    W_momentum::AbstractArray{Float64, 2}
+    W_momentum_aux::AbstractArray{Float64, 2}
+    b_momentum::AbstractArray{Float64, 1}
+    b_momentum_aux::AbstractArray{Float64, 1}
     param::Float64
     param_aux::Float64
     function TanhLayer(dim_input::Int64, dim_output::Int64, std::Float64=1.0, bias::Float64=0.0, param::Float64=0.9, param_aux::Float64=0.9)
@@ -69,17 +69,17 @@ mutable struct TanhLayer <: AbstractLayer
 end
 
 mutable struct ReLULayer <: AbstractLayer
-    W::Array{Float64, 2}
-    b::Array{Float64, 1}
-    input::Array{Float64, 2}
-    output::Array{Float64, 2}
+    W::AbstractArray{Float64, 2}
+    b::AbstractArray{Float64, 1}
+    input::AbstractArray{Float64, 2}
+    output::AbstractArray{Float64, 2}
     dim_input::Int64
     dim_output::Int64
     # for Momentum SGD, RMSProp, and Adam
-    W_momentum::Array{Float64, 2}
-    W_momentum_aux::Array{Float64, 2}
-    b_momentum::Array{Float64, 1}
-    b_momentum_aux::Array{Float64, 1}
+    W_momentum::AbstractArray{Float64, 2}
+    W_momentum_aux::AbstractArray{Float64, 2}
+    b_momentum::AbstractArray{Float64, 1}
+    b_momentum_aux::AbstractArray{Float64, 1}
     param::Float64
     param_aux::Float64
     function ReLULayer(dim_input::Int64, dim_output::Int64, std::Float64=1.0, bias::Float64=0.0, param::Float64=0.9, param_aux::Float64=0.9)
@@ -90,24 +90,24 @@ mutable struct ReLULayer <: AbstractLayer
     end
 end
 
-function forward_propagation(layer::AbstractLayer, x_::Array{Float64, 1})
+function forward_propagation(layer::AbstractLayer, x_::AbstractArray{Float64, 1})
     @assert layer.dim_input == size(x_)[1]
     x = collect(reshape(x_, size(x_)[1], 1))
     return forward_propagation_impl(layer, x)
 end
 
-function forward_propagation(layer::AbstractLayer, X::Array{Float64, 2})
+function forward_propagation(layer::AbstractLayer, X::AbstractArray{Float64, 2})
     @assert layer.dim_input == size(X)[1]
     return forward_propagation_impl(layer, X)
 end
 
-function forward_propagation_impl(layer::LinearLayer, X::Array{Float64, 2})
+function forward_propagation_impl(layer::LinearLayer, X::AbstractArray{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
     layer.input = copy(X)
     return (layer.W) * X .+ (layer.b)
 end
 
-function forward_propagation_impl(layer::SigmoidLayer, X::Array{Float64, 2})
+function forward_propagation_impl(layer::SigmoidLayer, X::AbstractArray{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
     layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
@@ -115,7 +115,7 @@ function forward_propagation_impl(layer::SigmoidLayer, X::Array{Float64, 2})
     return layer.output
 end
 
-function forward_propagation_impl(layer::TanhLayer, X::Array{Float64, 2})
+function forward_propagation_impl(layer::TanhLayer, X::AbstractArray{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
     layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
@@ -123,7 +123,7 @@ function forward_propagation_impl(layer::TanhLayer, X::Array{Float64, 2})
     return layer.output
 end
 
-function forward_propagation_impl(layer::ReLULayer, X::Array{Float64, 2})
+function forward_propagation_impl(layer::ReLULayer, X::AbstractArray{Float64, 2})
     # X is the array of [x1 x2 ... x_N], x1 is a vector of feature_size
     layer.input = copy(X)
     activation = (layer.W) * X .+ (layer.b)
@@ -156,7 +156,7 @@ function activate_derivative_impl(layer::ReLULayer)
     return (layer.output .> 0.0) * 1.0
 end
 
-function backward_propagation(layer::AbstractLayer, delta_output::Array{Float64, 2}, learning_rate::Float64, policy::String="Adam")
+function backward_propagation(layer::AbstractLayer, delta_output::AbstractArray{Float64, 2}, learning_rate::Float64, policy::String="Adam")
     @assert size(delta_output)[1] == layer.dim_output
     if policy == "SGD"
         return backward_propagation_impl_sgd(layer, delta_output, learning_rate)
@@ -171,7 +171,7 @@ function backward_propagation(layer::AbstractLayer, delta_output::Array{Float64,
     end
 end
 
-function backward_propagation_impl_sgd(layer::AbstractLayer, delta_output::Array{Float64, 2}, learning_rate::Float64)
+function backward_propagation_impl_sgd(layer::AbstractLayer, delta_output::AbstractArray{Float64, 2}, learning_rate::Float64)
     delta = delta_output .* activate_derivative_impl(layer)
     W = copy(layer.W)
     layer.W -= learning_rate .* (delta * transpose(layer.input))
@@ -180,7 +180,7 @@ function backward_propagation_impl_sgd(layer::AbstractLayer, delta_output::Array
     return transpose(W) * delta
 end
 
-function backward_propagation_impl_msgd(layer::AbstractLayer, delta_output::Array{Float64, 2}, learning_rate::Float64)
+function backward_propagation_impl_msgd(layer::AbstractLayer, delta_output::AbstractArray{Float64, 2}, learning_rate::Float64)
     delta = delta_output .* activate_derivative_impl(layer)
     W = copy(layer.W)
     W_grad = (delta * transpose(layer.input))
@@ -199,7 +199,7 @@ function backward_propagation_impl_msgd(layer::AbstractLayer, delta_output::Arra
     return transpose(W) * delta
 end
 
-function backward_propagation_impl_rmsprop(layer::AbstractLayer, delta_output::Array{Float64, 2}, learning_rate::Float64)
+function backward_propagation_impl_rmsprop(layer::AbstractLayer, delta_output::AbstractArray{Float64, 2}, learning_rate::Float64)
     delta = delta_output .* activate_derivative_impl(layer)
     W = copy(layer.W)
     W_grad = (delta * transpose(layer.input))
@@ -218,7 +218,7 @@ function backward_propagation_impl_rmsprop(layer::AbstractLayer, delta_output::A
     return transpose(W) * delta
 end
 
-function backward_propagation_impl_adam(layer::AbstractLayer, delta_output::Array{Float64, 2}, learning_rate::Float64)
+function backward_propagation_impl_adam(layer::AbstractLayer, delta_output::AbstractArray{Float64, 2}, learning_rate::Float64)
     delta = delta_output .* activate_derivative_impl(layer)
     W = copy(layer.W)
     W_grad = (delta * transpose(layer.input))
