@@ -4,6 +4,10 @@ Implementation of PRML alorithms in Julia language!
 
 Inspired by and great kudos to https://github.com/ctgk/PRML .
 
+## For running
+
+`PackageCompiler.create_sysimage([:PyPlot, :Distributions], replace_default=true)` is recommended.
+
 ## Chapter1
 
 ![image1](https://github.com/soblin/prml-julia/blob/master/notebook/images/ch1/image1.png)

@@ -1,19 +1,19 @@
 using LinearAlgebra
 
 mutable struct GaussianFeature
-    _means::Array{Float64, 1} # the list of means
+    _means::AbstractArray{Float64, 1} # the list of means
     _var::Float64 # the variance of gaussian
     _n_kernels::Int64 # cache the number of kernels
-    function GaussianFeature(means::Array{Float64, 1}, var::Float64)
+    function GaussianFeature(means::AbstractArray{Float64, 1}, var::Float64)
         new(means, var, size(means)[1]);
     end
 end
 
-function _gauss(mean::Float64, var::Float64, x::Array{Float64, 1})
+function _gauss(mean::Float64, var::Float64, x::AbstractArray{Float64, 1})
     return exp.(-(0.5 / var) .* (x .- mean).^2)
 end
 
-function transform(feature::GaussianFeature, x::Array{Float64, 1})
+function transform(feature::GaussianFeature, x::AbstractArray{Float64, 1})
     # this feature transforms R^1 to R^1
     # x is an array of size n_samples
     # returns Phi = [phi_1(x),,,, phi_N(x)] where phi_i(x) is a gaussian centered around means[i]
