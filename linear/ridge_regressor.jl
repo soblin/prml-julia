@@ -10,7 +10,8 @@ function fitting(regressor::RidgeRegressor, Phi::AbstractArray{Float64, 2}, t::A
     # t is the target vector of size (sample_size, 1)
     # `pinv(Phi)` = (Phi^T * Phi)^(-1) * Phi^T
     alpha = regressor._alpha;
-    n_feature = size(Phi)[1];
+    n_feature = size(Phi)[2];
+    @assert size(Phi)[1] == size(t)[1]
     E = Matrix(I, n_feature, n_feature);
     regressor._w = inv(transpose(Phi) * Phi + alpha * E) * transpose(Phi) * t;
 end
@@ -24,7 +25,7 @@ end
 
 function predict(regressor::RidgeRegressor, Phi::AbstractArray{Float64, 2})
     # `Phi` is the transformed feature of x, of size (n_feature, sample_size)
-    y = transpose(Phi) * regressor._w;
+    y = Phi * regressor._w;
     
     return y
 end

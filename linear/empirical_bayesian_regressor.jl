@@ -71,7 +71,7 @@ function predict(regressor::EmpiricalBayesianRegressor, Phi::AbstractArray{Float
     y = Phi * w_mean;
     
     if return_std == true
-        y_vars = 1.0 / regressor._beta .+ [Phi[i, :] * w_cov * transpose(Phi[i, :]) for i in 1:N];
+        y_vars = 1.0 / regressor._beta .+ [ transpose(Phi[i, :]) * w_cov * Phi[i, :] for i in 1:N];
         y_std = sqrt.(y_vars);
 
         return y, y_std

@@ -27,7 +27,7 @@ function fitting(regressor::BayesianRegressor, Phi::AbstractArray{Float64, 2}, t
     tmp = S_0_inv + beta * transpose(Phi) * Phi;
     # make S_N_inv Cholesky
     S_N_inv = (tmp + transpose(tmp)) / 2.0;
-    w_N = inv(S_N_inv) * (S_0_inv * w_0 + beta * transpos(Phi) * t);
+    w_N = inv(S_N_inv) * (S_0_inv * w_0 + beta * transpose(Phi) * t);
 
     # update
     regressor._w_mean = w_N;
@@ -43,7 +43,7 @@ function predict(regressor::BayesianRegressor, Phi::AbstractArray{Float64, 2}, r
     y = Phi * w_mean;
 
     if return_std == true
-        y_var = 1.0 / regressor._beta .+ [Phi[i, :] * w_cov * transpose(Phi[i, :]) for i in 1:N];
+        y_var = 1.0 / regressor._beta .+ [ transpose(Phi[i, :]) * w_cov * Phi[i, :] for i in 1:N];
         y_std = sqrt.(y_var);
         return y, y_std;
     end

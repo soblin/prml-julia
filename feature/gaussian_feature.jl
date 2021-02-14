@@ -19,11 +19,11 @@ function transform(feature::GaussianFeature, x::AbstractArray{Float64, 1})
     # returns Phi = [phi_1(x),,,, phi_N(x)] where phi_i(x) is a gaussian centered around means[i]
     n_samples = size(x)[1];
     n_kernels = feature._n_kernels;
-    Phi = zeros(n_kernels, n_samples);
+    Phi = zeros(n_samples, n_kernels);
     for i in 1:n_kernels
         mean = feature._means[i];
         var = feature._var;
-        Phi[i, :] = _gauss(mean, var, x);
+        Phi[:, i] = _gauss(mean, var, x);
     end
 
     return Phi;
