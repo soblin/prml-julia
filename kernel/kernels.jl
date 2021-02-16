@@ -65,8 +65,8 @@ function kernel(kernel::RBFKernel, x::AbstractArray{Float64, 2}, y::AbstractArra
     
     ret = zeros(n_samples1, n_samples2)
     for i in 1:n_samples1
+        x_i = x[:, i]
         for j in 1:n_samples2
-            x_i = x[:, i]
             y_j = y[:, j]
             ret[i, j] = rbf(kernel._params[1], kernel._params[2:end], x_i, y_j)
         end

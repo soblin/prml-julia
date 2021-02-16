@@ -16,7 +16,19 @@ mutable struct GaussianProcessRegressor
 end
 
 function log_likelihood(gp::GaussianProcessRegressor)
-    return -0.5 * log(abs(det(gp._cov))) - 0.5 * (transpose(gp._t) * gp._precision * gp._t) - 0.5 * length(gp._t) * log(2.0 * pi)
+    if gp._kernel._params[1] < 0
+        logdet = log(det(gp._cov))
+        if logdet <= 0
+            error("c0 < 0 and logdet <= 0")
+        end
+        error("c0 < 0 and logdet > 0")
+    end
+    logdet = log(det(gp._cov))    
+    if logdet <= 0
+        println()
+        error("c0 > 0 and logdet <= 0")
+    end
+    return -0.5 * log(det(gp._cov)) - 0.5 * (transpose(gp._t) * gp._precision * gp._t) - 0.5 * length(gp._t) * log(2.0 * pi)
 end
 
 """
