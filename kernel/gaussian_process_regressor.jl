@@ -15,6 +15,10 @@ mutable struct GaussianProcessRegressor
     end
 end
 
+function log_likelihood(gp::GaussianProcessRegressor)
+    return -0.5 * log(det(gp._cov)) - 0.5 * (transpose(gp._t) * gp._precision * gp._t) - 0.5 * length(gp._t) * log(2.0 * pi)
+end
+
 """
     fitting(gp::GaussianProcessRegressor, X::AbstractArray{Float64, 2}, t::AbstractArray{Float64, 1}, iter_max=0, learning_rate=0.1)
 
@@ -31,7 +35,30 @@ function fitting(gp::GaussianProcessRegressor, X::AbstractArray{Float64, 2}, t::
     gp._cov = K + E / gp._beta
     gp._precision = inv(gp._cov)
 
-    # TODO learn hyper parameter
+    log_likes = [-Inf]
+    # learn hyper parameter
+    precision = gp._precision
+    for i in 1:iter_max
+        n_params = gp._kernel._n_params
+        grads = derivatives(gp._kernel, X, X)
+        updates = [-tr(precision * grads[n, :, :]) + transpose(t) * precision * grads[n, :, :] * precision * t for n in 1:n_params]
+        for j in 1:iter_max
+            update_parameters(gp._kernel, learning_rate * updates)
+            K = kernel(gp._kernel, X, X)
+            gp._cov = K + E / gp._beta
+            gp._precision = inv(gp._cov)
+            log_like = log_likelihood(gp)
+            if log_like > log_likes[end]
+                push!(log_likes, log_like)
+                break
+            else
+                update_parameters(gp._kernel, -learning_rate * updates)
+                learning_rate *= 0.9
+            end
+        end
+    end
+    popfirst!(log_likes)
+    return log_likes
 end
 
 """
