@@ -70,8 +70,8 @@ function predict(gp::GaussianProcessRegressor, X::AbstractArray{Float64, 2}, wit
     n_feature = size(X)[1]
     n_samples = size(X)[2]
     
-    mus = zeros(n_feature, n_samples)
-    sigmas = zeros(n_feature, n_feature, n_samples)
+    mus = zeros(1, n_samples)
+    sigmas = zeros(1, 1, n_samples)
 
     for n in 1:n_samples
         x_n = X[:, n]
