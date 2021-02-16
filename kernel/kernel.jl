@@ -1,5 +1,5 @@
-export Kernel
 export PolynomialKernel
+export RBFKernel
 export GaussianProcessRegressor
 export fitting
 export predict
