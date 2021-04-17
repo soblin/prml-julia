@@ -1,5 +1,3 @@
-using SpecialFunctions
-
 mutable struct DirichletDist
     #=
     Dirichlet Distribution

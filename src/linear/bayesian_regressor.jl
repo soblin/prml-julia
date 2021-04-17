@@ -1,6 +1,3 @@
-using LinearAlgebra
-using Distributions
-
 mutable struct BayesianRegressor
     _alpha::Float64
     _beta::Float64

@@ -1,5 +1,3 @@
-using LinearAlgebra
-using Distributions
 abstract type AbstractLayer end
 
 mutable struct LinearLayer <: AbstractLayer

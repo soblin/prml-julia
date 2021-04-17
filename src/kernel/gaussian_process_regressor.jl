@@ -1,7 +1,3 @@
-using LinearAlgebra
-
-include("kernels.jl")
-
 mutable struct GaussianProcessRegressor
     _kernel::Kernel
     _beta::Float64

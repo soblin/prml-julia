@@ -1,0 +1,7 @@
+include("beta.jl")
+include("bernoulli.jl")
+include("dirichlet.jl")
+include("categorical.jl")
+include("gamma.jl")
+include("gaussian.jl")
+include("multivariate_gaussian.jl")

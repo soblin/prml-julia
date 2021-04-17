@@ -1,5 +1,3 @@
-include("dirichlet.jl")
-
 mutable struct CategoricalDist
     _mu::AbstractArray{Float64, 1}
     _dirichlet::DirichletDist

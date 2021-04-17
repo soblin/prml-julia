@@ -1,7 +1,3 @@
-using Statistics
-
-include("gamma.jl")
-
 mutable struct GaussianDist
     _mu::Float64
     _var::Float64 # sigma^2

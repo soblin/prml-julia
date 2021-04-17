@@ -1,5 +1,3 @@
-using SpecialFunctions
-
 mutable struct BetaDist
     _n_ones::Float64
     _n_zeros::Float64

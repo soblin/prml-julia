@@ -1,6 +1,3 @@
-using LinearAlgebra
-using Statistics
-
 mutable struct MultivariateGaussianDist
     _mu::AbstractArray{Float64, 1}
     _cov::AbstractArray{Float64, 2}

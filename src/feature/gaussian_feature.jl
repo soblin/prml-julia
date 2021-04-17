@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 mutable struct GaussianFeature
     _means::AbstractArray{Float64, 1} # the list of means
     _var::Float64 # the variance of gaussian

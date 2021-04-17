@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 mutable struct RidgeRegressor
     _w::AbstractArray{Float64, 1}
     _alpha::Float64

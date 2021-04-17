@@ -1,5 +1,3 @@
-using LinearAlgebra
-
 mutable struct LinearRegressor
     _w::AbstractArray{Float64, 1}
     _var::Float64

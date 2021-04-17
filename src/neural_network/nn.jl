@@ -1,5 +1,3 @@
-include("layer.jl")
-
 mutable struct NeuralNetwork
     layers::AbstractArray{AbstractLayer, 1}
     cost_function::AbstractCostFunction

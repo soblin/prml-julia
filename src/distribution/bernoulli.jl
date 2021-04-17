@@ -1,7 +1,3 @@
-using Distributions
-
-include("beta.jl")
-
 mutable struct BernoulliDist
     _mu::Float64
     _beta::BetaDist
