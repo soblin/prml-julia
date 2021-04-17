@@ -1,5 +1,9 @@
 # Julia PRML
 
+[![CI](https://github.com/soblin/prml-julia/actions/workflows/ci.yml/badge.svg)](https://github.com/soblin/prml-julia/actions/workflows/ci.yml)
+
+[![codecov](https://codecov.io/gh/soblin/prml-julia/branch/tests/graph/badge.svg?token=PQJJR658H3)](https://codecov.io/gh/soblin/prml-julia)
+
 Implementation of PRML alorithms in Julia language!
 
 Inspired by and great kudos to https://github.com/ctgk/PRML .
