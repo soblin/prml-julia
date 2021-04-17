@@ -30,6 +30,7 @@ export RidgeRegressor
 export BayesianRegressor
 export EmpiricalBayesianRegressor
 export fitting
+export log_evidence
 export predict
 export predictSampling
 
